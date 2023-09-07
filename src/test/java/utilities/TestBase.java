@@ -1,15 +1,22 @@
 package utilities;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class TestBase {
 
@@ -56,5 +63,26 @@ public abstract class TestBase {
         } catch (AWTException e) {
             throw new RuntimeException(e);
         }
+    }
+    // ekran görüntüsü tam sayfa
+    public void tumSayfaEkranGoruntusu(){
+
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYY.MM.dd.HH.mm.ss");
+        String tarih = date.format(dtf);
+
+        TakesScreenshot ts = (TakesScreenshot) driver;
+
+        File kaydet = new File("src/test/java/utilities/ekranGoruntusu"+tarih+".jpeg");
+
+        File geciciDosya = ts.getScreenshotAs(OutputType.FILE);
+
+        try {
+            FileUtils.copyFile(geciciDosya,kaydet);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }
